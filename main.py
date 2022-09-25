@@ -1,18 +1,9 @@
 """
 Done by: Yisrael Haber, Hadar Kaner
-
-In this script we concatenate the Lempel-Ziv and Huffman algorithms in order to compress a file. In order to compress a file enter 
-and then we decompress it to get the original file.
-The only requirement for the script is to have the dickens.txt file in the same directory as this script.
-The original file is 31.46 MB, and the compressed file is only 11.61 MB.
-Total Run Time - about 3 minutes.
 """
 from tqdm import tqdm
 #from burrows_wheeler import suffix_array_best
 
-UTF8 = 'utf-8'
-CP1252 = 'cp1252'
-LATIN1 = 'latin-1'
 base = 256
 default_char_dict = {' ': 0, 'e': 1, 't': 2, 'a': 3, 'o': 4, 'n': 5, 'i': 6, 'h': 7, 's': 8, 'r': 9, 'd': 10, 'l': 11, 'u': 12, '\r': 13, '\n': 14, 'm': 15, 'c': 16, 'w': 17, ',': 18, 'f': 19, 'g': 20, 'y': 21, 'p': 22, 'b': 23, "'": 24, '.': 25, 'v': 26, 'k': 27, 'I': 28, '-': 29, 'M': 30, 'T': 31, ';': 32, '"': 33, 'S': 34, 'A': 35, 'H': 36, '!': 37, 'W': 38, 'x': 39, 'B': 40, '?': 41, 'C': 42, 'q': 43, 'N': 44, 'P': 45, 'D': 46, 'j': 47, 'E': 48, 'L': 49, 'O': 50, 'Y': 51, 'G': 52, 'R': 53, 'F': 54, 'J': 55, 'z': 56, ':': 57, ')': 58, '(': 59, 'K': 60, 'U': 61, 'V': 62, 'Q': 63, '`': 64, '1': 65, 'X': 66, '2': 67, '0': 68, '8': 69, '3': 70, '4': 71, '5': 72, '6': 73, '7': 74, '_': 75, '*': 76, 'Z': 77, '9': 78, '&': 79, ']': 80, '[': 81, '{': 82, '}': 83, 'ï': 84, '¿': 85, '½': 86, '~': 87, '@': 88, '>': 89, '#': 90, '/': 91}
 
@@ -57,7 +48,7 @@ def lz_encode(string, char_dict):
 
 # get a lempel ziv encoded string and write its original string to the file
 def lz_decode_to_file(string, file_name, char_dict):
-  with open(file_name, 'w', encoding=CP1252, newline='\n') as file:
+  with open(file_name, 'w', newline='\n') as file:
     words_len = len(char_dict)
     count = 0
     code_word = ''
@@ -183,14 +174,14 @@ class Tree:
 
 def main(): 
   file_name = 'dickens.txt'
-  with open(file_name, 'r', encoding=CP1252, newline='\n') as file:
+  with open(file_name, 'r', newline='\n') as file:
     string = file.read()
-  char_dict = create_dict(string, default=True)
+  char_dict = create_dict(string, default=False)
   enc = lz_encode(string, char_dict)
   with open("encoded.txt", 'w') as file:
     file.write(enc)
   enc = huffman_encode(enc)
-  print(f"Length of Huffman encoding: {len(enc)}")
+  print(f"Length of Huffman encoding, and final compressed length: {len(enc)}")
   enc = huffman_decode(enc)
   dec = lz_decode_to_file(enc, "decoded.txt", char_dict)
   
